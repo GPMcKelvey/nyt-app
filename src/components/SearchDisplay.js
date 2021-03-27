@@ -4,6 +4,10 @@ import {Card, CardImg, CardBody, CardTitle, CardText, CardSubtitle} from 'reacts
 const SearchDisplay = (props) => {
 console.log(props);
 
+    // urlCheck() = () =>{
+    //     if()
+    // }
+
     let items = props.result;
     return (
         <div>
@@ -11,8 +15,7 @@ console.log(props);
                 items.map((article, index) => (
                     <div key={index}>
                     <Card>
-                        <CardImg top width="100%" src={`http://www.nytimes.com/${article.multimedia[0].url}
-                        `} alt="Card image cap" />
+                     {article.multimedia[0] ? <CardImg top width="50%"  src={`http://www.nytimes.com/${article.multimedia[0].url}`} alt="Card image cap"/> : null}
                             <CardBody>
                                 <CardTitle tag="h5" ><a href={article.web_url} target="_blank">{article.headline.main}</a></CardTitle>
                                 <CardSubtitle tag="h6" className="mb-2 text-muted">
