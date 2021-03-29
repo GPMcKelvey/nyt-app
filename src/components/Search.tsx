@@ -49,10 +49,15 @@ export default class Search extends Component<AcceptedProps, SearchState> {
     searchFetch = (event: any) => {
         const baseURL: string = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
         const key: string = "x8PXDV7Ne4BoGZoMZQ6DR57zWTjk7ugl";
-        const url: string = `${baseURL}?api-key=${key}&page=${this.state.pageNumber}&q=${this.state.searchTerm}
-        ${this.state.startDate !== '' ? `&begin_date=${this.state.startDate}` : ''}
-        ${this.state.endDate !== '' ? `&end_date=${this.state.endDate}` : ''}
-        ${this.state.startDate && this.state.endDate !== '' ? `&begin_date=${this.state.startDate}&end_date=${this.state.endDate}` : ''}`
+        let url: string = `${baseURL}?api-key=${key}&page=${this.state.pageNumber}&q=${this.state.searchTerm}`
+
+        if(this.state.startDate !== '') {
+          url += '&begin_date=' + this.state.startDate;
+        };
+        
+        if(this.state.endDate !== '') {
+          url += '&end_date=' + this.state.endDate;
+        };
 
         fetch(url)
         .then(res => res.json())
