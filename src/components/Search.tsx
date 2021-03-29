@@ -49,13 +49,19 @@ export default class Search extends Component<AcceptedProps, SearchState> {
     searchFetch = (event: any) => {
         const baseURL: string = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
         const key: string = "x8PXDV7Ne4BoGZoMZQ6DR57zWTjk7ugl";
-        fetch(`${baseURL}?api-key=${key}&page=${this.state.pageNumber}&q=${this.state.searchTerm}`)
+        const url: string = `${baseURL}?api-key=${key}&page=${this.state.pageNumber}&q=${this.state.searchTerm}
+        ${this.state.startDate !== '' ? `&begin_date=${this.state.startDate}` : ''}
+        ${this.state.endDate !== '' ? `&end_date=${this.state.endDate}` : ''}
+        ${this.state.startDate && this.state.endDate !== '' ? `&begin_date=${this.state.startDate}&end_date=${this.state.endDate}` : ''}`
+
+        fetch(url)
         .then(res => res.json())
         .then((json) => (
             //console.log(json),
             this.setResults(json)
         ))
         event.preventDefault();
+        console.log(this.state.startDate, this.state.endDate)
     }
 
     setResults = (e: any) => {
@@ -67,10 +73,24 @@ export default class Search extends Component<AcceptedProps, SearchState> {
     searchFunction (event: any) {
             const input = event.target.value;
             this.setState({
-            searchTerm: input
+            searchTerm: input,
+            pageNumber: 0,
+            startDate: '',
+            endDate: ''
             });
         }
-
+    startDateFunc (event: any) {
+        const input1 = event.target.value;
+        this.setState({
+            startDate: input1
+        })
+    }
+    endDateFunc (event: any) {
+        const input2 = event.target.value;
+        this.setState({
+            endDate: input2
+        })
+    }
 
 
     render() {
@@ -79,9 +99,9 @@ export default class Search extends Component<AcceptedProps, SearchState> {
                 <form onSubmit={this.searchFetch}>
                     <input placeholder='search' onChange={(event) => this.searchFunction(event)}/>
                     <label>Start Date: </label>
-                    <input type='date' name="startDate" id='startDate' />
+                    <input type='date' name="startDate" id='startDate' onChange={(event) => this.startDateFunc(event)} />
                     <label>End Date: </label>
-                    <input type='date' name='endDate' id='endDate'/>
+                    <input type='date' name='endDate' id='endDate' onChange={(event) => this.endDateFunc(event)} />
                     <Button type="submit">Search</Button>
                 </form>
                 <h4>Page: {this.state.pageNumber}</h4>
@@ -92,44 +112,3 @@ export default class Search extends Component<AcceptedProps, SearchState> {
         )
     }
 }
-
-
-
-
-// const SearchDisplay = (props: any) => {
-
-//        let items = props.result.response;
-//     return (
-//         <div>
-//             {
-//                 items.map((article: any) =>
-//                     <li>{article}</li>
-//                     )
-//             }
-//         </div>
-//     )
-    
-// }
-
-// export default Search;
-
-
-
-
-
-
-// componentWillUpdate() {
-//     const baseURL: string = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-//     const key: string = "x8PXDV7Ne4BoGZoMZQ6DR57zWTjk7ugl";
-//     fetch(`${baseURL}?api-key=${key}&page=${this.state.pageNumber}&q=${this.state.searchTerm}`)
-//     .then(res => res.json())
-//     .then((json) => JSON.stringify(json))
-//     .then((jsonStr) => 
-//     this.setState({results: jsonStr}))
-//     // (
-//     //     console.log(json)
-//     //     this.setResults(json);
-//     // ))
-//     // event.preventDefault();
-//     console.log(this.state.results);
-// }
