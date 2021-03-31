@@ -12,8 +12,8 @@ console.log(props);
         <div>
             {
                 items.map((article, index) => (
-                    <div key={index}>
-                    <Card>
+                    // <div key={index}>
+                    <Card key={index}>
                      {article.multimedia[0] ? <CardImg top width="50%"  src={`http://www.nytimes.com/${article.multimedia[0].url}`} alt="Card image cap"/> : <p>No Image Found</p>}
                             <CardBody>
                                 <CardTitle tag="h5" ><a href={article.web_url} target="_blank">{article.headline.main}</a></CardTitle>
@@ -28,7 +28,7 @@ console.log(props);
                                 <CardText>{article.snippet}</CardText>
                             </CardBody>
                     </Card>
-                    </div>
+                    // </div>
                 ))
             }
         </div>
