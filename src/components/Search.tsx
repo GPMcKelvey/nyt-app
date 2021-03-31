@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component, FormEvent } from 'react';
 import SearchDisplay from './SearchDisplay';
 import {Button} from 'reactstrap';
 
 type AcceptedProps = {
+    
 }
 
 type SearchState = {
@@ -25,7 +26,7 @@ export default class Search extends Component<AcceptedProps, SearchState> {
         }
     }
 
-    prev = async (e: any) => {
+    prev = async (e: object) => {
          if(this.state.pageNumber > 0)  {
       await this.setState({
             pageNumber: (this.state.pageNumber -1)
@@ -37,7 +38,7 @@ export default class Search extends Component<AcceptedProps, SearchState> {
     }
 }
 
-    next = async (e: any) => {
+    next = async (e: object) => {
         await this.setState({
             pageNumber: (this.state.pageNumber +1)
         })
@@ -50,6 +51,10 @@ export default class Search extends Component<AcceptedProps, SearchState> {
         const baseURL: string = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
         const key: string = "x8PXDV7Ne4BoGZoMZQ6DR57zWTjk7ugl";
         let url: string = `${baseURL}?api-key=${key}&page=${this.state.pageNumber}&q=${this.state.searchTerm}`
+        
+        if(this.state.startDate && this.state.endDate !== ''){
+            url += '&begin_date=' + this.state.startDate + '&end_date=' + this.state.endDate
+        };
 
         if(this.state.startDate !== '') {
           url += '&begin_date=' + this.state.startDate;
@@ -58,6 +63,7 @@ export default class Search extends Component<AcceptedProps, SearchState> {
         if(this.state.endDate !== '') {
           url += '&end_date=' + this.state.endDate;
         };
+
 
         fetch(url)
         .then(res => res.json())
@@ -75,26 +81,34 @@ export default class Search extends Component<AcceptedProps, SearchState> {
         })
         console.log(this.state.results)
     }
-    searchFunction (event: any) {
-            const input = event.target.value;
-            this.setState({
-            searchTerm: input,
-            pageNumber: 0,
-            startDate: '',
-            endDate: ''
-            });
-        }
-    startDateFunc (event: any) {
-        const input1 = event.target.value;
+    // searchFunction (event: any) {
+    //         const input = event.target.value;
+    //         this.setState({
+    //         searchTerm: input,
+    //         pageNumber: 0,
+    //         startDate: '',
+    //         endDate: ''
+    //         });
+    //     }
+    // startDateFunc (event: any) {
+    //     const input1 = event.target.value;
+    //     this.setState({
+    //         startDate: input1
+    //     })
+    // }
+    // endDateFunc (event: any) {
+    //     const input2 = event.target.value;
+    //     this.setState({
+    //         endDate: input2
+    //     })
+    // }
+
+    inputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
         this.setState({
-            startDate: input1
-        })
-    }
-    endDateFunc (event: any) {
-        const input2 = event.target.value;
-        this.setState({
-            endDate: input2
-        })
+                ...this.state,
+                [e.target.name]: value,
+            })
     }
 
 
@@ -102,11 +116,11 @@ export default class Search extends Component<AcceptedProps, SearchState> {
         return (
             <div>
                 <form onSubmit={this.searchFetch}>
-                    <input placeholder='search' onChange={(event) => this.searchFunction(event)}/>
+                    <input placeholder='search' name='searchTerm' id='search' value={this.state.searchTerm} onChange={this.inputHandler}/>
                     <label>Start Date: </label>
-                    <input type='date' name="startDate" id='startDate' onChange={(event) => this.startDateFunc(event)} />
+                    <input type='date' name="startDate" id='start' pattern="[0-9]{8}" value={this.state.startDate} onChange={this.inputHandler} />
                     <label>End Date: </label>
-                    <input type='date' name='endDate' id='endDate' onChange={(event) => this.endDateFunc(event)} />
+                    <input type='date' name='endDate' id='end' pattern="[0-9]{8}" value={this.state.endDate} onChange={this.inputHandler} />
                     <Button type="submit">Search</Button>
                 </form>
                 <h4>Page: {this.state.pageNumber}</h4>
@@ -117,3 +131,11 @@ export default class Search extends Component<AcceptedProps, SearchState> {
         )
     }
 }
+
+
+//this.setState({
+//     ...this.state,
+//     [e.target.name] : value
+// })
+
+//value={this.state.endDate} onChange={this.inputHandler}

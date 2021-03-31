@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, CardImg, CardBody, CardTitle, CardText, CardSubtitle} from 'reactstrap';
 
+
 const SearchDisplay = (props) => {
 console.log(props);
 
